@@ -428,9 +428,6 @@
   "Function to execute when expanding a leaf node in the
   Emmet AST.")
 
-(defvar emmet-expand-jsx-className? nil
-  "Wether to use `className' when expanding `.classes'")
-
 (emmet-defparameter
  emmet-tag-settings-table
  (gethash "tags" (gethash "html" emmet-preferences)))
@@ -554,7 +551,7 @@
        (puthash tag-name fn emmet-tag-snippets-table)))
 
    (let* ((id           (emmet-concat-or-empty " id=\"" tag-id "\""))
-          (class-attr  (if emmet-expand-jsx-className? " className=\"" " class=\""))
+          (class-attr  (if (memq major-mode emmet-jsx-major-modes) " className=\"" " class=\""))
           (classes      (emmet-mapconcat-or-empty class-attr tag-classes " " "\""))
           (props        (let* ((tag-props-default
                                 (and settings (gethash "defaultAttr" settings)))

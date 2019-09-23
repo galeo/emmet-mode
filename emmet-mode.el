@@ -250,6 +250,10 @@ e. g. without semicolons")
   "File local filter used by `emmet-default-filter'.")
 (make-variable-buffer-local 'emmet-file-filter)
 
+(defvar emmet-jsx-major-modes
+  '(rjsx-mode
+    typescript-tsx-mode))
+
 (defun emmet-transform (input)
   (if (or (emmet-detect-style-tag-and-attr) emmet-use-css-transform)
       (emmet-css-transform input)
@@ -3485,9 +3489,6 @@ tbl))
   "Function to execute when expanding a leaf node in the
   Emmet AST.")
 
-(defvar emmet-expand-jsx-className? nil
-  "Wether to use `className' when expanding `.classes'")
-
 (emmet-defparameter
  emmet-tag-settings-table
  (gethash "tags" (gethash "html" emmet-preferences)))
@@ -3611,7 +3612,7 @@ tbl))
        (puthash tag-name fn emmet-tag-snippets-table)))
 
    (let* ((id           (emmet-concat-or-empty " id=\"" tag-id "\""))
-          (class-attr  (if emmet-expand-jsx-className? " className=\"" " class=\""))
+          (class-attr  (if (memq major-mode emmet-jsx-major-modes) " className=\"" " class=\""))
           (classes      (emmet-mapconcat-or-empty class-attr tag-classes " " "\""))
           (props        (let* ((tag-props-default
                                 (and settings (gethash "defaultAttr" settings)))
